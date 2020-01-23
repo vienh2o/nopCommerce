@@ -454,6 +454,96 @@ set @resources='
   <LocaleResource Name="BackInStockSubscriptions.Notification.Unsubscribed">
     <Value>Unsubscribed</Value>
   </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.ChooseShippingTitle">
+    <Value>Shipping Method</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.Country">
+    <Value>Country</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShipping.Country.Required">
+    <Value>Country is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.EstimateShipping.EstimatedDeliveryPrefix">
+    <Value>Estimated Delivery on</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.EstimateShipping.NoSelectedShippingOption">
+    <Value>Please select the address you want to ship from</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.NoShippingOptions">
+    <Value>No shipping options</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.EstimateShipping.PriceTitle">
+    <Value>Shipping:</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.SelectShippingOption.Button">
+    <Value>Apply</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.ShippingOption.EstimatedDelivery">
+    <Value>Estimated Delivery</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.ShippingOption.Name">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.ShippingOption.Price">
+    <Value>Price</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.ShipToTitle">
+    <Value>Ship to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.StateProvince">
+    <Value>State / province</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.EstimateShipping.ToAddress">
+    <Value>to</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.EstimateShipping.ViaProvider">
+    <Value>via</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShippingPopUp.ZipPostalCode">
+    <Value>Zip / postal code</Value>
+  </LocaleResource>
+  <LocaleResource Name="Shipping.EstimateShipping.ZipPostalCode.Required">
+    <Value>Zip / postal code is required</Value>
+  </LocaleResource>
+  <LocaleResource Name="Products.QuantityShouldBePositive">
+    <Value>Quantity should be positive</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.TransitDays">
+    <Value>Transit days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Shipping.FixedByWeightByTotal.Fields.TransitDays.Hint">
+    <Value>The number of days of delivery of the goods.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Pickup.PickupInStore.Fields.TransitDays">
+    <Value>Transit days</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.Pickup.PickupInStore.Fields.TransitDays.Hint">
+    <Value>The number of days of delivery of the goods to pickup point.</Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.EstimateShipping.ZipPostalCode.Required">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.EstimateShipping.Country.Required">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.EstimateShipping.ZipPostalCode">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.EstimateShipping.StateProvince">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.EstimateShipping.Country">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.EstimateShipping">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.EstimateShipping.ShippingOptionWithRate">
+    <Value></Value>
+  </LocaleResource>
+  <LocaleResource Name="ShoppingCart.EstimateShipping.Tooltip">
+    <Value></Value>
+  </LocaleResource>
 </Language>
 '
 
@@ -2510,3 +2600,21 @@ INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (63
 INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196961091647941, CAST(N'2020-03-18T07:23:32.000' AS DateTime), N'AddGetLowStockProductsIX')
 INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637196961091647942, CAST(N'2020-03-18T07:23:32.000' AS DateTime), N'AddPMMProductManufacturerIX')
 INSERT [MigrationVersionInfo] ([Version], [AppliedOn], [Description]) VALUES (637200411689037680, CAST(N'2020-03-18T07:23:32.000' AS DateTime), N'AddOrderRewardPointsHistoryFK')
+
+--new column
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ShippingByWeightByTotalRecord]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+and NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[ShippingByWeightByTotalRecord]') AND NAME = 'TransitDays')
+BEGIN
+	ALTER TABLE [ShippingByWeightByTotalRecord]
+	ADD TransitDays int NULL
+END
+GO
+
+--new column
+IF EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[StorePickupPoint]') and OBJECTPROPERTY(object_id, N'IsUserTable') = 1)
+and NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id = object_id('[StorePickupPoint]') AND NAME = 'TransitDays')
+BEGIN
+	ALTER TABLE [StorePickupPoint]
+	ADD TransitDays int NULL
+END
+GO
