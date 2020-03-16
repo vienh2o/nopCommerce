@@ -1509,11 +1509,15 @@ BEGIN
 END
 GO
 
---update activity log type
-IF EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [Name] = N'Upload a favicon and app icons archive')
+IF EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'UploadIconsArchive')
 BEGIN
-    UPDATE [ActivityLogType] 
+    UPDATE [ActivityLogType]
     SET [SystemKeyword] = N'UploadIcons', [Name] = N'Upload a favicon and app icons'
-    WHERE [Name] = N'Upload a favicon and app icons archive'
+    WHERE [SystemKeyword] = N'UploadIconsArchive'
+END
+ELSE IF NOT EXISTS (SELECT 1 FROM [ActivityLogType] WHERE [SystemKeyword] = N'UploadIcons')
+BEGIN
+   INSERT INTO [ActivityLogType] ([SystemKeyword], [Name], [Enabled])
+   VALUES (N'UploadIcons', N'Upload a favicon and app icons', 'true')
 END
 GO
