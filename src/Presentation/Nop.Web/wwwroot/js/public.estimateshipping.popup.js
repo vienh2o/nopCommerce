@@ -102,6 +102,7 @@
                 let self = this;
 
                 $.each(options, function (i, option) {
+                    // try select the shipping option with the same provider and address
                     if (self.selectedShippingOption &&
                           self.selectedShippingOption.provider === option.Name &&
                             self.addressesAreEqual(self.selectedShippingOption.address, address)) {
@@ -115,6 +116,7 @@
                     self.addShippingOption(option.Name, option.DeliveryDateFormat, option.Price);
                 });
 
+                // select the first option
                 if (!activeOption) {
                     activeOption = {
                         provider: options[0].Name,
@@ -124,6 +126,7 @@
                     };
                 }
 
+                // if we have the already selected shipping options with the same address, reload it
                 if (this.selectedShippingOption && this.addressesAreEqual(this.selectedShippingOption.address, address))
                     this.selectShippingOption(activeOption);
 
