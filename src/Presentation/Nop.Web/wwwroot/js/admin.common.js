@@ -48,6 +48,16 @@ function checkAllOverriddenStoreValue(item) {
 
 function checkOverriddenStoreValue(obj, selector) {
     var elementsArray = selector.split(",");
+
+    // toggle hidden checkbox
+    let $s = $(selector);
+    if ($s.attr('type') === 'checkbox') {
+        var $h = $(`input:hidden[name="${$s.attr('name')}"]`);
+        if ($h) {
+            $h.val($s.val());
+        }
+    }
+
     if (!$(obj).is(':checked')) {
         $(selector).attr('disabled', true);
         //Kendo UI elements are enabled/disabled some other way
